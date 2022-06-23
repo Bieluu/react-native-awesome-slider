@@ -38,7 +38,7 @@ export enum PanDirectionEnum {
   RIGHT = 2,
   END = 3,
 }
-export type SliderThemeType =
+export type SliderColorsType =
   | {
       /**
        * Color to fill the progress in the seekbar
@@ -64,6 +64,8 @@ export type SliderThemeType =
        * Disabled color to fill the progress in the seekbar
        */
       disableMinTrackTintColor?: string;
+
+      thumbColor?: string;
     }
   | null
   | undefined;
@@ -184,7 +186,7 @@ export type AwesomeSliderProps = {
   markWidth?: number;
   onHapticFeedback?: () => void;
   hapticMode?: `${HapticModeEnum}`;
-  theme?: SliderThemeType;
+  colors?: SliderColorsType;
   /**
    * Current swipe direction
    * @enum Animated.SharedValue<PanDirectionEnum>
@@ -200,12 +202,13 @@ export type AwesomeSliderProps = {
   bubbleWidth?: number;
   testID?: string;
 };
-const defaultTheme: SliderThemeType = {
+const defaultColors: SliderColorsType = {
   minimumTrackTintColor: [palette.Main, palette.Main],
   maximumTrackTintColor: palette.Gray,
   cacheTrackTintColor: palette.Gray,
   bubbleBackgroundColor: palette.Main,
   bubbleTextColor: palette.White,
+  thumbColor: palette.White,
 };
 export const Slider: FC<AwesomeSliderProps> = ({
   bubble,
@@ -241,7 +244,7 @@ export const Slider: FC<AwesomeSliderProps> = ({
   stepTimingOptions = false,
   style,
   testID,
-  theme,
+  colors,
   thumbScaleValue,
   thumbWidth = 15,
 }) => {
@@ -256,8 +259,8 @@ export const Slider: FC<AwesomeSliderProps> = ({
   const thumbIndex = useSharedValue(0);
   const isTriggedHaptic = useSharedValue(false);
   const _theme = {
-    ...defaultTheme,
-    ...theme,
+    ...defaultColors,
+    ...colors,
   };
 
   const sliderTotalValue = () => {
@@ -699,9 +702,7 @@ export const Slider: FC<AwesomeSliderProps> = ({
           ) : (
             <View
               style={{
-                backgroundColor: _theme.minimumTrackTintColor?.length
-                  ? _theme.minimumTrackTintColor[0]
-                  : palette.Main,
+                backgroundColor: _theme.thumbColor,
                 height: thumbWidth,
                 width: thumbWidth,
                 borderRadius: thumbWidth,
