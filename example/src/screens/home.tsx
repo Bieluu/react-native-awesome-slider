@@ -183,7 +183,10 @@ export const Home = () => {
               cache={cache}
               thumbScaleValue={thumbScaleValue}
               theme={{
-                minimumTrackTintColor: theme.colors.primary,
+                minimumTrackTintColor: [
+                  theme.colors.primary,
+                  theme.colors.background,
+                ],
                 maximumTrackTintColor: theme.colors.border,
                 bubbleBackgroundColor: theme.colors.background,
                 bubbleTextColor: theme.colors.text,
@@ -306,7 +309,7 @@ export const Home = () => {
               minimumValue={min10}
               maximumValue={max110}
               theme={{
-                minimumTrackTintColor: '#fc8bab',
+                minimumTrackTintColor: ['#fc8bab', '#4b0018'],
                 maximumTrackTintColor: 'rgba(0,0,0,.1)',
               }}
               panDirectionValue={thumbLottieValue}
@@ -342,7 +345,7 @@ export const Home = () => {
               style={styles.slider}
               minimumValue={min}
               theme={{
-                minimumTrackTintColor: '#fc8bab',
+                minimumTrackTintColor: ['#fc8bab', '#4b0018'],
                 maximumTrackTintColor: 'rgba(0,0,0,.1)',
               }}
               renderBubble={() => null}

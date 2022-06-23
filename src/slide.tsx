@@ -20,6 +20,8 @@ import Animated, {
 import { Bubble, BubbleRef } from './ballon';
 import { palette } from './theme/palette';
 import { clamp } from './utils';
+import LinearGradient from 'react-native-linear-gradient';
+
 const formatSeconds = (second: number) => `${Math.round(second * 100) / 100}`;
 const hitSlop = {
   top: 12,
@@ -41,7 +43,7 @@ export type SliderThemeType =
       /**
        * Color to fill the progress in the seekbar
        */
-      minimumTrackTintColor?: string;
+      minimumTrackTintColor?: string[];
       /**
        * Color to fill the background in the seekbar
        */
@@ -199,7 +201,7 @@ export type AwesomeSliderProps = {
   testID?: string;
 };
 const defaultTheme: SliderThemeType = {
-  minimumTrackTintColor: palette.Main,
+  minimumTrackTintColor: [palette.Main, palette.Main],
   maximumTrackTintColor: palette.Gray,
   cacheTrackTintColor: palette.Gray,
   bubbleBackgroundColor: palette.Main,
@@ -296,7 +298,11 @@ export const Slider: FC<AwesomeSliderProps> = ({
         ? withTiming(markLeftArr.value[thumbIndex.value], stepTimingOptions)
         : markLeftArr.value[thumbIndex.value];
     } else if (disableTrackFollow) {
-      translateX = clamp(thumbValue.value, 0, width.value ? width.value - thumbWidth : 0);
+      translateX = clamp(
+        thumbValue.value,
+        0,
+        width.value ? width.value - thumbWidth : 0,
+      );
     } else {
       translateX = clamp(
         progressToValue(progress.value),
@@ -653,17 +659,21 @@ export const Slider: FC<AwesomeSliderProps> = ({
               animatedCacheXStyle,
             ]}
           />
-          <Animated.View
-            style={[
-              styles.seek,
-              {
-                backgroundColor: disable
-                  ? _theme.disableMinTrackTintColor
-                  : _theme.minimumTrackTintColor,
-              },
-              animatedSeekStyle,
-            ]}
-          />
+          <Animated.View style={[styles.seek, animatedSeekStyle]}>
+            <LinearGradient
+              colors={
+                disable
+                  ? ([
+                      _theme.disableMinTrackTintColor,
+                      _theme.disableMinTrackTintColor,
+                    ] as string[])
+                  : (_theme.minimumTrackTintColor as string[])
+              }
+              style={{ width: 'auto', height: '100%' }}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            />
+          </Animated.View>
         </Animated.View>
         {sliderWidth > 0 &&
           step &&
@@ -689,7 +699,9 @@ export const Slider: FC<AwesomeSliderProps> = ({
           ) : (
             <View
               style={{
-                backgroundColor: _theme.minimumTrackTintColor,
+                backgroundColor: _theme.minimumTrackTintColor?.length
+                  ? _theme.minimumTrackTintColor[0]
+                  : palette.Main,
                 height: thumbWidth,
                 width: thumbWidth,
                 borderRadius: thumbWidth,
